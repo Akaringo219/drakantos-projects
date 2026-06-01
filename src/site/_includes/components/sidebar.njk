@@ -74,23 +74,6 @@
                               </div>
                         {%endif%}
                   {%endif%}
-                  {% for key, group in collections.sidebarTree %}
-  {% if group.index %}
-    <div class="folder">{{ group.index.data.title }}</div>
-  {% else %}
-    <div class="folder">{{ key }}</div>
-  {% endif %}
-
-  <ul>
-    {% for item in group.children %}
-      <li><a href="{{ item.url }}">{{ item.data.title }}</a></li>
-    {% endfor %}
-  </ul>
-{% endfor %}
-
-                  {% for imp in dynamics.sidebar.bottom %}
-                        {% include imp %}
-                  {% endfor %}
             </div>
       </div>
 </aside>
