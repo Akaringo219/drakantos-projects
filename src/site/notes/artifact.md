@@ -1,0 +1,5 @@
+---
+{"dg-publish":true,"dg-path":"equipment-artifact/artifact","permalink":"/equipment-artifact/artifact/","title":"アーティファクト","dg-note-properties":{"title":"アーティファクト"}}
+---
+
+編集中です。
