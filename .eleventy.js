@@ -761,6 +761,32 @@ module.exports = function(eleventyConfig) {
       singleTags: ["link"],
     },
   });
+  
+  eleventyConfig.addCollection("sidebarTree", function (collectionApi) {
+  const tree = {};
+
+  collectionApi.getAll().forEach((item) => {
+    const path = item.data["dg-path"];
+    if (!path) return;
+
+    const parts = path.split("/");
+    const root = parts[0];
+    const isIndex = parts[1] === "index";
+
+    if (!tree[root]) {
+      tree[root] = { index: null, children: [] };
+    }
+
+    if (isIndex) {
+      tree[root].index = item;
+    } else {
+      tree[root].children.push(item);
+    }
+  });
+
+  return tree;
+});
+
 
   userEleventySetup(eleventyConfig);
 
