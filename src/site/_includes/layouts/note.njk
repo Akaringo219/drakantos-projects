@@ -3,6 +3,8 @@ permalink: "notes/{{ page.fileSlug | slugify }}/"
 ---
 <!DOCTYPE html>
 <html lang="{{ meta.mainLanguage }}">
+<link rel="icon" href="/favicon.png" type="image/png">
+
   <head>
     <title>{% if title %}{{ title }}{% else %}{{ page.fileSlug }}{% endif %}</title>
     {%include "components/pageheader.njk"%}
