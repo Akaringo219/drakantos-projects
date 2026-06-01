@@ -1,0 +1,42 @@
+{# 階層ツリーを構築 #}
+{% set tree = {} %}
+
+{% for note in collections.notes %}
+  {% set path = note.data["dg-path"] %}
+  {% if path %}
+    {% set parts = path | split("/") %}
+    {% set root = parts[0] %}
+    {% set isIndex = parts[1] == "index" %}
+
+    {% if not tree[root] %}
+      {% set tree = tree | merge({ (root): { index: null, children: [] } }) %}
+    {% endif %}
+
+    {% if isIndex %}
+      {% set tree = tree | merge({ (root): tree[root] | merge({ index: note }) }) %}
+    {% else %}
+      {% set tree[root].children = tree[root].children.concat([note]) %}
+    {% endif %}
+  {% endif %}
+{% endfor %}
+
+{# 描画 #}
+<div class="hierarchical-sidebar">
+  {% for key, group in tree %}
+    <div class="folder">
+      {% if group.index %}
+        <a href="{{ group.index.url }}">{{ group.index.data.title }}</a>
+      {% else %}
+        {{ key }}
+      {% endif %}
+    </div>
+
+    <ul class="folder-children">
+      {% for item in group.children %}
+        <li>
+          <a href="{{ item.url }}">{{ item.data.title }}</a>
+        </li>
+      {% endfor %}
+    </ul>
+  {% endfor %}
+</div>
