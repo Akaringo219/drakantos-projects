@@ -3,6 +3,43 @@
             <div class="sidebar-container">
 
 {% include "components/user/sidebar/top/hierarchicalSidebar.njk" %}
+{% set notes = collections.all | filter(attribute="data.dg-publish") %}
+
+{% set tree = {} %}
+
+{# ノートを階層構造に変換 #}
+{% for note in notes %}
+  {% set path = note.data["dg-path"] | split("/") %}
+  {% set current = tree %}
+  {% for segment in path %}
+    {% if not current[segment] %}
+      {% set current = current.update({ (segment): { "_note": null } }) %}
+    {% endif %}
+    {% set current = current[segment] %}
+  {% endfor %}
+  {% set current = current.update({ "_note": note }) %}
+{% endfor %}
+
+{# 再帰的にツリーを描画 #}
+{% macro render(node) %}
+  <ul>
+    {% for key, value in node %}
+      {% if key != "_note" %}
+        <li>
+          {% if value._note %}
+            <a href="{{ value._note.url }}">{{ value._note.data.title }}</a>
+          {% else %}
+            {{ key }}
+          {% endif %}
+          {{ render(value) }}
+        </li>
+      {% endif %}
+    {% endfor %}
+  </ul>
+{% endmacro %}
+
+{{ render(tree) }}
+
 
                   {%if settings.dgShowLocalGraph === true%}
                         {%include "components/graphScript.njk"%}
