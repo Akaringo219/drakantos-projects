@@ -2,7 +2,6 @@
       <div class="sidebar">
             <div class="sidebar-container">
 
-{% include "components/user/sidebar/top/hierarchicalSidebar.njk" %}
 {% set notes = collections.all | filter(attribute="data.dg-publish") %}
 
 {% set tree = {} %}
