@@ -8,7 +8,16 @@
 
 {# ノートを階層構造に変換 #}
 {% for note in notes %}
-  {% set path = note.data["dg-path"] | split("/") %}
+{% set path = note.data["dg-path"] | split("/") %}
+
+{# 最後が index なら親ノード扱いにする #}
+{% if path[path.length - 1] == "index" %}
+  {% set path = path.slice(0, path.length - 1) %}
+  {% set isIndex = true %}
+{% else %}
+  {% set isIndex = false %}
+{% endif %}
+
   {% set current = tree %}
   {% for segment in path %}
     {% if not current[segment] %}
@@ -16,7 +25,14 @@
     {% endif %}
     {% set current = current[segment] %}
   {% endfor %}
+  {# index の場合は親ノードに note を紐づける #}
+{% if isIndex %}
   {% set current = current.update({ "_note": note }) %}
+{% else %}
+  {# 通常の子ノード #}
+  {% set current = current.update({ "_note": note }) %}
+{% endif %}
+
 {% endfor %}
 
 {# 再帰的にツリーを描画 #}
